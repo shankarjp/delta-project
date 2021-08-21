@@ -1,0 +1,31 @@
+version: '3'
+services:
+  ubuntu:
+    conatiner_name: ubuntu_container
+    build: ./ubuntu
+    links:
+      - mysql
+  
+  mysql:
+    container_name: mysql_container
+    build: ./mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: MYSQL_ROOT_PASSWORD
+      MYSQL_DATABASE: userinfo
+    ports:
+      - 3306:3306
+    volumes:
+      - dbdata:/var/lib/mysql
+  
+  phpmyadmin:
+    container_name: phpmyadmin_container
+    image: phpmyadmin:latest
+    posts:
+      - 8080:80
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+
+volumes:
+  dbdata:
