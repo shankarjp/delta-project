@@ -1,6 +1,4 @@
-#remove comments after finishing
 import cv2
-import numpy as np
 
 def encode(input_image, output_image_name, file_name):
     height, width, nbchannels = input_image.shape
@@ -18,15 +16,12 @@ def encode(input_image, output_image_name, file_name):
     length = len(data)
     if(width*height*nbchannels < length + 64):
         raise Exception("Not enough space to hold all steganographic data")
-    #binary_value(length, 64)
     binary_value = bin(length)[2:]
     if(len(binary_value) > 64):
         raise Exception("Binary Value larger than expected")
     else:
         while(len(binary_value) < 64):
             binary_value = "0" + binary_value
-        #return binary_value
-    #put_binary_value(binary_value)
     for c in binary_value:
         value = list(input_image[current_height, current_width])
         if(int(c) == 1):
@@ -56,16 +51,12 @@ def encode(input_image, output_image_name, file_name):
             pass
         else:
             byte = ord(byte)
-        #byteValue(byte)
-        #return binary_value(byte, 8)
         binv = bin(byte)[2:]
         if(len(binv) > 8):
             raise Exception("Binary Value larger than expected")
         else:
             while(len(binv) < 8):
                 binv = "0" + binv
-            #return(binv)
-        #put_binary_value(binv)
         for c in binv:
             val = list(input_image[current_height, current_width])
             if(int(c) == 1):
@@ -104,13 +95,10 @@ def decode(encoded_image, extracted_file_name):
     maskzerovalues = [254, 253, 251, 247, 239, 223, 191, 127]
     maskzero = maskzerovalues.pop(0)
 
-    #read_bits(64)
     bits = ""
     for i in range(64):
-        #read_bit()
         value = encoded_image[current_height, current_width][current_channel]
         value = int(value) & maskone
-        #next_slot()
         if(current_channel == nbchannels-1):
             current_channel = 0
             if(current_width == width-1):
@@ -132,18 +120,13 @@ def decode(encoded_image, extracted_file_name):
             bits += "1"
         else:
             bits += "0"
-    #return(bits)
     length = int(bits, 2)
     output = b""
     for i in range(length):
-        #read_byte()
-        #return(read_bits(8))
         bits = ""
         for i in range(8):
-            #read_bit()
             value = encoded_image[current_height, current_width][current_channel]
             value = int(value) & maskone
-            #next_slot()
             if(current_channel == nbchannels-1):
                 current_channel = 0
                 if(current_width == width-1):
@@ -165,9 +148,7 @@ def decode(encoded_image, extracted_file_name):
                 bits += "1"
             else:
                 bits += "0"
-        #return(bits)
         output += bytearray([int(bits, 2)])
-    #return(output)
     f = open(extracted_file_name, "wb")
     f.write(output)
     f.close()
