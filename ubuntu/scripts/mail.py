@@ -24,4 +24,5 @@ def sendMail(sender_email, sender_password, reciever_email, subject, body, files
 
     with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
         smtp.login(sender_email, sender_password)
-        smtp.send_message(message)
+        content = message.as_string()
+        smtp.send_message(content)
