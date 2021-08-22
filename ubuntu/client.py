@@ -1,5 +1,6 @@
 import os
 import socket
+import time
 import scripts.db as db
 
 IP = socket.gethostbyname(socket.gethostname())
@@ -13,7 +14,7 @@ SERVER_DATA_PATH = os.path.join(cwd, "server_data")
 def main():
     connection = False
     response = input("Do you have an account? (y/n) : ")
-    if(response == 'y' || response == 'Y'):
+    if(response == 'y' or response == 'Y'):
         while !connection:
             print("Verify Your Identity")
             user_name = input("username : ")
@@ -23,7 +24,7 @@ def main():
                 connection = True
             else:
                 print("Login Failed\nTry Again\n")
-    elif(response == 'n' || response == 'N'):
+    elif(response == 'n' or response == 'N'):
         while !connection:
             print("Enter your Credentials")
             user_name = input("username : ")
@@ -54,6 +55,43 @@ def main():
         client.send(raw_data.encode("utf-8"))
         if cmd == "LOGOUT":
             break
+        elif cmd == "DOWNLOAD":
+            response = client.recv(SIZE).decode("utf-8")
+            response = response.split("@")
+            if(response[0] == "FOUND"):
+                time.sleep(0.01)
+                file_size = response[1]
+                file_name = mod_data[1]
+                file_path = os.path.join(CLIENT_DATA_PATH, file_name)
+                f = open(file_path, "wb")
+                data = client.recv(SIZE)
+                total_recv = len(data)
+                f.write(data)
+                while total_recv < file_size:
+                    data = client.recv(SIZE)
+                    total_recv += len(data)
+                    f.write(data)
+                print(f"Downloaded {file_name}")
+                f.close()
+            else:
+                print("File Not Found")
+        elif cmd == "UPLOAD":
+            file_name = mod_data[1]
+            file_path = os.path.join(CLIENT_DATA_PATH, file_name)
+            if os.path.isfile(file_path):
+                client.send(f"FOUND@{str(os.path.getsize(file_path))}".encode("utf-8"))
+                time.sleep(0.01)
+                f = open(file_path, "rb")
+                while True:
+                    data = f.read(SIZE)
+                    if data:
+                        client.send(data)
+                    else:
+                        f.close()
+                        print(f"Uploaded {file_name}")
+                        break
+            else:
+                client.send(f"NOTFOUND")
     print("Disconnected from the server")
     client.close()
 
