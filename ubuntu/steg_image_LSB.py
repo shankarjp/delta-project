@@ -166,6 +166,8 @@ def main():
         encoded_image = cv2.imread(encoded_image_name)
         extracted_file_name = input("Extracted File Name : ")
         decode(encoded_image, extracted_file_name)
+    else:
+        pass
 
 if __name__ == "__main__":
     main()
