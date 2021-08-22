@@ -10,12 +10,6 @@ SIZE = 1024
 cwd = os.getcwd()
 SERVER_DATA_PATH = os.path.join(cwd, "server_data")
 
-def pad(data):
-    return data + ((16 - len(data)%16)*'{')
-
-def pad_file(data):
-    return data + ((16 - len(data)%16)*b"\0")
-
 def handle_client(conn, addr):
     print(f"[NEW CONNECTION] {addr} connected")
     conn.send("Welcome to Stego File Server!".encode("utf-8"))

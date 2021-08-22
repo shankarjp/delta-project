@@ -1,13 +1,17 @@
 FROM ubuntu:latest
 
 RUN apt-get update
+RUN apt-get install -y python3-pip
+RUN pip3 install mysql-connector-python
+RUN pip3 install opencv-python
 
 WORKDIR /stegoServer
 
 COPY server.py server.py
 COPY client.py client.py
-COPY db.py db.py
-COPY mail.py mail.py
-COPY encrypt.py encrypt.py
-COPY steg_image_LSB.py steg_image_LSB.py
-COPY steg_audio.py steg_audio.py
+
+RUN mkdir scripts
+RUN mkdir server_files
+
+COPY scripts scripts/
+COPY server_data server_data/

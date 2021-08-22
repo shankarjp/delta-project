@@ -1,10 +1,11 @@
 version: '3'
 services:
   ubuntu:
-    conatiner_name: ubuntu_container
+    container_name: ubuntu_container
     build: ./ubuntu
     links:
       - mysql
+    command: tail -F anything
   
   mysql:
     container_name: mysql_container
@@ -20,7 +21,7 @@ services:
   phpmyadmin:
     container_name: phpmyadmin_container
     image: phpmyadmin:latest
-    posts:
+    ports:
       - 8080:80
     environment:
       PMA_HOST: mysql

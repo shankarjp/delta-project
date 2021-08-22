@@ -1,6 +1,9 @@
-import cv2
+#Image Stego using LSB
 
-def encode(input_image, output_image_name, file_name):
+def encode(input_image_name, output_image_name, file_name):
+    import cv2
+    input_image = cv2.imread(input_image_name)
+
     height, width, nbchannels = input_image.shape
     size = width*height
     current_width = 0
@@ -83,7 +86,11 @@ def encode(input_image, output_image_name, file_name):
                 current_channel += 1
         cv2.imwrite(output_image_name, input_image)
 
-def decode(encoded_image, extracted_file_name):
+
+def decode(encoded_image_name, extracted_file_name):
+    import cv2
+    encoded_image = cv2.imread(encoded_image_name)
+
     height, width, nbchannels = encoded_image.shape
     size = width*height
     current_width = 0
@@ -152,23 +159,4 @@ def decode(encoded_image, extracted_file_name):
     f = open(extracted_file_name, "wb")
     f.write(output)
     f.close()
-
-def main():
-    response = int(input("Welcome to Image Stego using LSB\n1. Encode\t2.Decode\nChoose an option: "))
-    if(response == 1):
-        input_image_name = input("Input Image Name : ")
-        input_image = cv2.imread(input_image_name)
-        output_image_name = input("Output Image Name : ")
-        file_name = input("File to be encoded : ")
-        encode(input_image, output_image_name, file_name)
-    elif(response == 2):
-        encoded_image_name = input("Encoded Image Name : ")
-        encoded_image = cv2.imread(encoded_image_name)
-        extracted_file_name = input("Extracted File Name : ")
-        decode(encoded_image, extracted_file_name)
-    else:
-        pass
-
-if __name__ == "__main__":
-    main()
         
